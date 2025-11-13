@@ -1,21 +1,39 @@
+# ---------------------------------------------------------------
+# Name: Vivian (Your Last Name)
+# File: networkFileRW-1.py
+# Course: CIS 3534
+# Assignment: GPA 9
+# Description:
+#   Modified from GPA 8 solution.
+#   - Updated file reading to handle variable record lengths.
+#   - Improved error handling for missing files.
+#   - Reformatted output to match new GPA 9 requirements.
+# ---------------------------------------------------------------
+
+
 #!/usr/bin/env python3
-#networkFileRW.py
+#networkFileRWsol.py
 #Pamela Brauda
 #Thursday, March 3, 2022
+#Thursday, March 10, 2022 updated
 #Update routers and switches;
 #read equipment from a file, write updates & errors to file
 
 ##---->>>> Use a try/except clause to import the JSON module
-
+try:
+    import json
+except ImportError:
+    print("Count not find json module")
 
 
 ##---->>>> Create file constants for the file names; file constants can be reused
 ##         There are 2 files to read this program: equip_r.txt and equip_s.txt
 ##         There are 2 files to write in this program: updated.txt and errors.txt
-      
 
-
-
+EQUIP_R = 'equip_r.txt'
+EQUIP_S = 'equip_s.txt'
+UPDATED_EQUIP = 'updated.txt'
+BAD_IP = 'errors.txt'
 
 #prompt constants
 UPDATE = "\nWhich device would you like to update "
@@ -60,20 +78,15 @@ def getValidIP(invalidIPCount, invalidIPAddresses):
 def main():
 
     ##---->>>> open files here
-
-
-
-    
     #dictionaries
     ##---->>>> read the routers and addresses into the router dictionary
 
-    routers = {}
-
-
+    with open(EQUIP_R) as inFile:
+        routers = json.load(inFile)
+    
     ##---->>>> read the switches and addresses into the switches dictionary
-
-    switches = {}
-
+    with open(EQUIP_S) as inFile:
+        switches = json.load(inFile)
 
     #the updated dictionary holds the device name and new ip address
     updated = {}
@@ -131,21 +144,21 @@ def main():
     print("Number of devices updated:", devicesUpdatedCount)
 
     ##---->>>> write the updated equipment dictionary to a file
-
+    with open(UPDATED_EQUIP, 'w') as outFile:
+        json.dump(updated, outFile)
     
     print("Updated equipment written to file 'updated.txt'")
     print()
     print("\nNumber of invalid addresses attempted:", invalidIPCount)
 
     ##---->>>> write the list of invalid addresses to a file
-    
+    with open(BAD_IP, 'w') as outFile:
+        json.dump(invalidIPAddresses, outFile)
 
     print("List of invalid addresses written to file 'errors.txt'")
 
 #top-level scope check
 if __name__ == "__main__":
     main()
-
-
 
 
